@@ -1,0 +1,31 @@
+body {
+  background-color: #696969;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#imageSupport {
+  width: 200%;
+  height: 100%;
+  background-size: 100%;
+}
+
+
+#shell {
+  position: absolute;
+  top: 35%;
+  width: 100%;
+  text-align: center;
+}
+
+
+#main {
+  width: 30%;
+  margin: auto;
+  border: solid 1px black;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.7)
+}
+
+a {
+  color: #800000;
+}

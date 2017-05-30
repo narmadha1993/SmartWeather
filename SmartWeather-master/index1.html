@@ -1,0 +1,117 @@
+<html>
+	<head>
+
+    <title>Weather-forecast Webpage</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	<style>
+			*{
+				padding:0px;
+				margin:0px;
+			}
+
+			header{
+			height:100px;
+			text-align:center;
+			font-size:50px;
+			color:white;
+			line-height:100px;
+			}
+#main1 {
+  width: 30%;
+  margin: auto;
+  border: solid 1px black;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.7)
+}
+        
+#shellnew {
+  position: absolute;
+  top: 35%;
+  width: 100%;
+  text-align: center;
+}
+
+        body{
+background-size:cover !important;        }
+
+            .input{
+			margin-right:0px;
+			}
+
+		</style>
+
+		<script src="angularLib.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	</head>
+	<body ng-app="myApp" ng-controller="ctrl" ng-style="{'background': 'url('+bg +')no-repeat center center fixed'}">
+		<div>
+			<a href="index.html">
+								<span class="glyphicon glyphicon-home"></span>
+							</a>
+
+				</div>
+
+
+        <header></header>
+		<div class="col-xs-6 col-md-6">
+			<input class="form-control input" type="text" ng-model="cname" placeholder="Please enter City Name"/>
+		</div>
+		<div class="col-xs-6 col-md-2">
+			<button type="Submit" class="btn btn-success" ng-click="disp()" ng-model="result">Get Weather</button>
+		</div>
+
+  <div id="shellnew" ng-show="result">
+ <section id="main1">
+<h5>Description:{{weatherData.data.weather[0].description}}</h5>
+				<h5>Temp:{{weatherData.data.main.temp}}<sup>o</sup>C</h5>
+				<h5>Pressure:{{weatherData.data.main.pressure}}
+				<h5>Humidity:{{weatherData.data.main.humidity}}</h5>
+				<h5>Min Temp:{{weatherData.data.main.temp_min}}<sup>o</sup>C</h5>
+				<h5>Max Temp:{{weatherData.data.main.temp_max}}<sup>o</sup>C</h5>
+
+				<h5>Sunrise:{{weatherData.data.sys.sunrise}}</h5>
+				<h5>Sunset:{{weatherData.data.sys.sunset}}</h5>
+</section>
+</div>
+
+		<script>
+				var ang=angular.module('myApp',[]);
+				ang.controller('ctrl',function($scope,$http){
+                    $scope.result = false;
+                    $scope.bg = 'background.jpg';
+				$scope.disp=function(){
+						$http.get('http://api.openweathermap.org/data/2.5/weather?q='+$scope.cname+'&appid=d9cfcc35d9c2684d5fbbdb413adecbc0&units=metric').then(function(response){
+console.log(response);
+								$scope.weatherData = response;
+                                $scope.bgimage();
+                               // $scope.result=true;
+
+							})
+				      }
+                $scope.bgimage=function(){
+                     
+                       /* $scope.bg ='https://farm6.staticflickr.com//5553//31593389076_d2312046e3_b.jpg';*/
+                       var description = $scope.weatherData.data.weather[0].description;
+                    
+                        var searchDesc, splitDesc;
+                        splitDesc = description.split(" ");
+                        searchDesc = splitDesc.slice(-1)[0];
+						$http.get('https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=bb0aa3f100a726b84f80cb8375f71c78&lat='+$scope.weatherData.data.coord.lat+'&lon='+$scope.weatherData.data.coord.lon+'&accuracy=1&tags='+'&sort=relevance&extras=url_l&format=json').then(function(response){
+                            console.log(response.data);
+                            var fullText = response.data;
+                            var segment = (fullText.slice(14, -14)) + "}";
+                            var fullJSON = JSON.parse(segment);
+                            $scope.bg = fullJSON.photos.photo[0].url_l;							
+                                $scope.result=true;
+
+							})
+				      }
+				});
+
+		</script>
+	</body>
+</html>
